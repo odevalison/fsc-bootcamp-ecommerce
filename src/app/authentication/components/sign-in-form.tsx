@@ -50,6 +50,7 @@ export default function SignInForm() {
       fetchOptions: {
         onSuccess: () => {
           router.push("/");
+          toast.success("Login efetuado com sucesso!");
         },
         onError: (ctx) => {
           if (ctx.error.code === "USER_NOT_FOUND") {
@@ -121,8 +122,12 @@ export default function SignInForm() {
           </CardContent>
 
           <CardFooter className="flex flex-col gap-2">
-            <Button type="submit" className="w-full">
-              Entrar
+            <Button
+              disabled={form.formState.isSubmitting}
+              type="submit"
+              className="w-full"
+            >
+              {form.formState.isSubmitting ? "Entrando..." : "Entrar"}
             </Button>
 
             <Button

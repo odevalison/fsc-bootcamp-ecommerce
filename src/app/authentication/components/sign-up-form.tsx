@@ -66,6 +66,7 @@ export default function SignUpForm() {
       fetchOptions: {
         onSuccess: () => {
           router.push("/");
+          toast.success("Conta criada com sucesso!");
         },
         onError: (ctx) => {
           if (ctx.error.code === "USER_ALREADY_EXISTS") {
@@ -159,8 +160,12 @@ export default function SignUpForm() {
           </CardContent>
 
           <CardFooter>
-            <Button type="submit" className="w-full">
-              Criar conta
+            <Button
+              disabled={form.formState.isSubmitting}
+              type="submit"
+              className="w-full"
+            >
+              {form.formState.isSubmitting ? "Criando conta..." : "Criar conta"}
             </Button>
           </CardFooter>
         </form>
