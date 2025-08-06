@@ -1,7 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 const formSchema = z
   .object({
@@ -44,6 +47,7 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 export default function SignUpForm() {
+  const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,8 +58,26 @@ export default function SignUpForm() {
     },
   });
 
-  const onSubmit = (values: FormValues) => {
-    console.log("form validado", values);
+  const onSubmit = async ({ name, password, email }: FormValues) => {
+    await authClient.signUp.email({
+      name,
+      email,
+      password,
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: (ctx) => {
+          if (ctx.error.code === "USER_ALREADY_EXISTS") {
+            toast.error("E-mail já cadastrado.");
+            return form.setError("email", {
+              message: "E-mail já cadastrado.",
+            });
+          }
+          toast.error(ctx.error.message);
+        },
+      },
+    });
   };
 
   return (
@@ -123,7 +145,11 @@ export default function SignUpForm() {
                 <FormItem>
                   <FormLabel>Confirmar senha</FormLabel>
                   <FormControl>
-                    <Input placeholder="Confirme sua senha" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Confirme sua senha"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
