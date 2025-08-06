@@ -13,8 +13,6 @@ interface ProductItemProps {
 const ProductItem = ({ product }: ProductItemProps) => {
   const firstVariant = product.variants[0];
 
-  console.log(firstVariant.imageUrl);
-
   return (
     <Link prefetch href="/" className="flex flex-col gap-4">
       <Image
