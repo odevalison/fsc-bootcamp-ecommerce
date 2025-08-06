@@ -61,8 +61,8 @@ export default function SignUpForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Entrar</CardTitle>
-        <CardDescription>Faça login para continuar.</CardDescription>
+        <CardTitle>Criar conta</CardTitle>
+        <CardDescription>Crie uma conta para continuar.</CardDescription>
       </CardHeader>
 
       <Form {...form}>
