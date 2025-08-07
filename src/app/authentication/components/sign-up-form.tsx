@@ -46,7 +46,7 @@ const formSchema = z
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function SignUpForm() {
+const SignUpForm = () => {
   const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -172,4 +172,6 @@ export default function SignUpForm() {
       </Form>
     </Card>
   );
-}
+};
+
+export default SignUpForm;

@@ -16,7 +16,7 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 
-export function Header() {
+const Header = () => {
   const { data: session } = authClient.useSession();
 
   return (
@@ -95,4 +95,6 @@ export function Header() {
       </header>
     </>
   );
-}
+};
+
+export default Header;

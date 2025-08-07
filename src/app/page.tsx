@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import CategorySelector from "@/components/common/category-selector";
 import Footer from "@/components/common/footer";
-import { Header } from "@/components/common/header";
+import Header from "@/components/common/header";
 import PartnerBrands from "@/components/common/partner-brands";
 import ProductsList from "@/components/common/products-list";
 import { db } from "@/db";
