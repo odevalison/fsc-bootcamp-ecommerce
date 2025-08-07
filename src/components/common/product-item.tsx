@@ -16,7 +16,11 @@ const ProductItem = ({ product, textsContainerMaxWidth }: ProductItemProps) => {
   const firstVariant = product.variants[0];
 
   return (
-    <Link prefetch href="/" className="flex flex-col gap-4">
+    <Link
+      prefetch
+      href={`/product/${firstVariant.slug}`}
+      className="flex flex-col gap-4"
+    >
       <Image
         width={0}
         height={0}
