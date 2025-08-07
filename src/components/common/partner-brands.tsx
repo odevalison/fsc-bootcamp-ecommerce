@@ -51,7 +51,6 @@ const PartnerBrands = () => {
             <Card className="flex h-[80px] w-[80px] items-center justify-center rounded-3xl">
               <CardContent>
                 <Image
-                  priority
                   src={brand.path}
                   alt={brand.name}
                   width={30}
