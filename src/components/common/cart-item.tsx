@@ -58,7 +58,7 @@ const CartItem = ({
         </Button>
 
         <p className="text-sm font-bold">
-          {formatCentsToBRL(variantPriceInCents)}
+          {formatCentsToBRL(variantPriceInCents * quantity)}
         </p>
       </div>
     </div>
