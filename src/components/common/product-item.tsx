@@ -18,7 +18,7 @@ const ProductItem = ({ product, textsContainerMaxWidth }: ProductItemProps) => {
   return (
     <Link
       prefetch
-      href={`/product/${firstVariant.slug}`}
+      href={`/product/${product.slug}?variant=${firstVariant.slug}`}
       className="flex flex-col gap-4"
     >
       <Image

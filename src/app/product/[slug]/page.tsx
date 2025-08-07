@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import type { SearchParams } from "nuqs/server";
 
 import Footer from "@/components/common/footer";
 import Header from "@/components/common/header";
@@ -12,31 +13,34 @@ import { formatCentsToBRL } from "@/helpers/money";
 
 import QuantitySelector from "./components/quantity-selector";
 import VariantSelector from "./components/variant-selector";
+import { loadSerachParams } from "./search-params";
 
 interface ProductPageProps {
+  searchParams: Promise<SearchParams>;
   params: Promise<{ slug: string }>;
 }
 
-const ProductPage = async ({ params }: ProductPageProps) => {
+const ProductPage = async ({ params, searchParams }: ProductPageProps) => {
   const { slug } = await params;
+  const { variant: variantSlug } = await loadSerachParams(searchParams);
 
-  const productVariant = await db.query.productVariantTable.findFirst({
-    where: eq(productVariantTable.slug, slug),
+  const product = await db.query.productTable.findFirst({
+    where: eq(productTable.slug, slug),
     with: {
-      product: {
-        with: {
-          variants: true,
-        },
-      },
+      variants: true,
     },
   });
 
-  if (!productVariant) {
+  const variant = await db.query.productVariantTable.findFirst({
+    where: eq(productVariantTable.slug, variantSlug),
+  });
+
+  if (!product || !variant) {
     return notFound();
   }
 
   const likelyProducts = await db.query.productTable.findMany({
-    where: eq(productTable.categoryId, productVariant.product.categoryId),
+    where: eq(productTable.categoryId, product.categoryId),
     with: {
       variants: true,
     },
@@ -51,27 +55,24 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           width={0}
           height={0}
           sizes="100vw"
-          src={productVariant.imageUrl}
-          alt={productVariant.name}
+          src={variant.imageUrl}
+          alt={variant.name}
           className="h-auto w-full"
         />
 
         <div className="px-5">
           <VariantSelector
-            selectedVariant={productVariant.slug}
-            variants={productVariant.product.variants}
+            selectedVariant={variantSlug}
+            product={product}
+            variants={product.variants}
           />
         </div>
 
         <div className="px-5">
-          <h2 className="text-lg font-semibold">
-            {productVariant.product.name}
-          </h2>
-          <h3 className="text-muted-foreground text-sm">
-            {productVariant.name}
-          </h3>
+          <h2 className="text-lg font-semibold">{product.name}</h2>
+          <h3 className="text-muted-foreground text-sm">{variant.name}</h3>
           <h3 className="text-lg font-semibold">
-            {formatCentsToBRL(productVariant.priceInCents)}
+            {formatCentsToBRL(variant.priceInCents)}
           </h3>
         </div>
 
@@ -89,7 +90,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
         </div>
 
         <div className="px-5">
-          <p className="text-sm">{productVariant.product.description}</p>
+          <p className="text-sm">{product.description}</p>
         </div>
 
         <ProductsList title="Talvez você goste" products={likelyProducts} />
