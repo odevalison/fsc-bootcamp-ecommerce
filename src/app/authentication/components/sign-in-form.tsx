@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -125,9 +126,12 @@ const SignInForm = () => {
             <Button
               disabled={form.formState.isSubmitting}
               type="submit"
-              className="w-full"
+              className="flex w-full items-center justify-center"
             >
-              {form.formState.isSubmitting ? "Entrando..." : "Entrar"}
+              {form.formState.isSubmitting && (
+                <Loader2 className="animate-spin" />
+              )}
+              Entrar
             </Button>
 
             <Button
