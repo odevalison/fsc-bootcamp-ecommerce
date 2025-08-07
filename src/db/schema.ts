@@ -24,6 +24,10 @@ export const userTable = pgTable("user", {
     .notNull(),
 });
 
+export const userRelations = relations(userTable, ({ many }) => ({
+  shippingAdress: many(shippingAdressTable),
+}));
+
 export const sessionTable = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -117,6 +121,36 @@ export const produtVariantRelations = relations(
     product: one(productTable, {
       fields: [productVariantTable.productId],
       references: [productTable.id],
+    }),
+  }),
+);
+
+export const shippingAdressTable = pgTable("shipping_address", {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id, { onDelete: "cascade" }),
+  recipientName: text("recipient_name").notNull(),
+  email: text().notNull(),
+  cpfOrCnpj: text("cpf_or_cnpj").notNull(),
+  street: text().notNull(),
+  number: text().notNull(),
+  complement: text(),
+  city: text().notNull(),
+  state: text().notNull(),
+  neighborhood: text().notNull(),
+  zipCode: text().notNull(),
+  country: text().notNull(),
+  phone: text().notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const shippingAdressRelations = relations(
+  shippingAdressTable,
+  ({ one }) => ({
+    user: one(userTable, {
+      fields: [shippingAdressTable.userId],
+      references: [userTable.id],
     }),
   }),
 );
