@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 const QuantitySelector = () => {
   const [quantity, setQuantity] = useQueryState(
-    "qty",
+    "quantity",
     parseAsInteger.withDefault(1),
   );
 
