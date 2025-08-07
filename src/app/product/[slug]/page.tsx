@@ -6,14 +6,13 @@ import type { SearchParams } from "nuqs/server";
 import Footer from "@/components/common/footer";
 import Header from "@/components/common/header";
 import ProductsList from "@/components/common/products-list";
-import { Button } from "@/components/ui/button";
 import { db } from "@/db";
 import { productTable, productVariantTable } from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
 
-import QuantitySelector from "./components/quantity-selector";
+import ProductActions from "./components/product-actions";
 import VariantSelector from "./components/variant-selector";
-import { loadSerachParams } from "./search-params";
+import { loadSearchParams } from "./search-params";
 
 interface ProductPageProps {
   searchParams: Promise<SearchParams>;
@@ -22,7 +21,7 @@ interface ProductPageProps {
 
 const ProductPage = async ({ params, searchParams }: ProductPageProps) => {
   const { slug } = await params;
-  const { variant: variantSlug } = await loadSerachParams(searchParams);
+  const { variant: variantSlug } = await loadSearchParams(searchParams);
 
   const product = await db.query.productTable.findFirst({
     where: eq(productTable.slug, slug),
@@ -76,18 +75,7 @@ const ProductPage = async ({ params, searchParams }: ProductPageProps) => {
           </h3>
         </div>
 
-        <div className="px-5">
-          <QuantitySelector />
-        </div>
-
-        <div className="flex flex-col space-y-2 px-5">
-          <Button size="lg" variant="outline" className="rounded-full">
-            Adicionar à sacola
-          </Button>
-          <Button size="lg" className="rounded-full">
-            Comprar agora
-          </Button>
-        </div>
+        <ProductActions variantId={variant.id} />
 
         <div className="px-5">
           <p className="text-sm">{product.description}</p>

@@ -4,4 +4,4 @@ export const variantSearchParam = {
   variant: parseAsString.withDefault(""),
 };
 
-export const loadSerachParams = createLoader(variantSearchParam);
+export const loadSearchParams = createLoader(variantSearchParam);
