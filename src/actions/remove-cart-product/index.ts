@@ -26,13 +26,13 @@ export const removeCartProduct = async (data: RemoveCartProductSchema) => {
     where: (item, { eq }) => eq(item.productVariantId, data.cartItemId),
     with: { cart: true },
   });
-  const cartDoesNotBelongsToUser = cartItem?.cart.userId !== session.user.id;
-
-  if (cartDoesNotBelongsToUser) {
-    throw new Error("You don't have permission to do it");
-  }
   if (!cartItem) {
     throw new Error("Product variant not founded in your cart");
+  }
+
+  const cartDoesNotBelongsToUser = cartItem.cart.userId !== session.user.id;
+  if (cartDoesNotBelongsToUser) {
+    throw new Error("You don't have permission to do it");
   }
 
   await db.delete(cartItemTable).where(eq(cartItemTable.id, cartItem.id));
