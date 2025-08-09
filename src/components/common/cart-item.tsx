@@ -1,12 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
-import { addProductToCart } from "@/actions/add-cart-product";
-import { decreaseCartProductQuantity } from "@/actions/decrease-cart-product-quantity";
-import { removeCartProduct } from "@/actions/remove-cart-product";
 import { formatCentsToBRL } from "@/helpers/money";
+import { useDecreaseCartProdudct } from "@/hooks/mutations/use-decrease-cart-product";
+import { useIncreaseCartProduct } from "@/hooks/mutations/use-increase-cart-product";
+import { useRemoveCartProduct } from "@/hooks/mutations/use-remove-cart-product";
 
 import { Button } from "../ui/button";
 
@@ -29,23 +28,10 @@ const CartItem = ({
   variantPriceInCents,
   quantity,
 }: CartItemProps) => {
-  const queryClient = useQueryClient();
-  const removeCartProductMutation = useMutation({
-    mutationKey: ["remove-cart-product", cartItemId],
-    mutationFn: () => removeCartProduct({ cartItemId }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cart"] }),
-  });
-  const decreaseCartProductQuantityMutation = useMutation({
-    mutationKey: ["decrease-cart-product-quantity", cartItemId],
-    mutationFn: () => decreaseCartProductQuantity({ cartItemId }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cart"] }),
-  });
-  const increaseCartProductQuantityMutation = useMutation({
-    mutationKey: ["decrease-cart-product-quantity", variantId],
-    mutationFn: () =>
-      addProductToCart({ productVariantId: variantId, quantity: 1 }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cart"] }),
-  });
+  const removeCartProductMutation = useRemoveCartProduct(cartItemId);
+  const decreaseCartProductQuantityMutation =
+    useDecreaseCartProdudct(cartItemId);
+  const increaseCartProductQuantityMutation = useIncreaseCartProduct(variantId);
 
   const handleDeleteProduct = () => {
     removeCartProductMutation.mutate(undefined, {
@@ -57,6 +43,7 @@ const CartItem = ({
       },
     });
   };
+
   const handleDecreaseProductQuantity = () => {
     decreaseCartProductQuantityMutation.mutate(undefined, {
       onError: () => {
@@ -64,6 +51,7 @@ const CartItem = ({
       },
     });
   };
+
   const handleIncreaseProductQuantity = () => {
     increaseCartProductQuantityMutation.mutate(undefined, {
       onError: () => {
