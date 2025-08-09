@@ -41,18 +41,16 @@ const Cart = () => {
                 {cartIsLoading && <p>Carregando carrinho...</p>}
 
                 {cart?.items.map((item) => (
-                  <div key={item.id}>
-                    <CartItem
-                      key={item.id}
-                      cartItemId={item.id}
-                      productName={item.productVariant.product.name}
-                      variantId={item.productVariantId}
-                      variantImageUrl={item.productVariant.imageUrl}
-                      variantName={item.productVariant.name}
-                      variantPriceInCents={item.productVariant.priceInCents}
-                      quantity={item.quantity}
-                    />
-                  </div>
+                  <CartItem
+                    key={item.id}
+                    cartItemId={item.id}
+                    productName={item.productVariant.product.name}
+                    variantId={item.productVariantId}
+                    variantImageUrl={item.productVariant.imageUrl}
+                    variantName={item.productVariant.name}
+                    variantPriceInCents={item.productVariant.priceInCents}
+                    quantity={item.quantity}
+                  />
                 ))}
               </div>
             </ScrollArea>

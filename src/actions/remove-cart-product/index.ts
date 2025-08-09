@@ -23,7 +23,7 @@ export const removeCartProduct = async (data: RemoveCartProductSchema) => {
   }
 
   const cartItem = await db.query.cartItemTable.findFirst({
-    where: (item, { eq }) => eq(item.productVariantId, data.cartItemId),
+    where: (item, { eq }) => eq(item.id, data.cartItemId),
     with: { cart: true },
   });
   if (!cartItem) {
