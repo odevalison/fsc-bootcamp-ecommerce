@@ -1,6 +1,7 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
+import Link from "next/link";
 
 import { formatCentsToBRL } from "@/helpers/money";
 import { useCart } from "@/hooks/queries/use-cart";
@@ -81,7 +82,7 @@ const Cart = () => {
               </div>
 
               <Button size="lg" className="mt-5 rounded-full">
-                Finalizar compra
+                <Link href="/cart/identification">Finalizar compra</Link>
               </Button>
             </div>
           )}
