@@ -1,6 +1,8 @@
-const Footer = () => {
+import { cn } from "@/lib/utils";
+
+const Footer = ({ className }: { className?: string }) => {
   return (
-    <footer className="bg-accent w-full gap-1 p-8">
+    <footer className={cn("bg-accent w-full gap-1 p-8", className)}>
       <p className="text-xs font-medium">© 2025 Copyright BEWEAR</p>
       <p className="text-muted-foreground text-xs font-medium">
         Todos os direitos reservados

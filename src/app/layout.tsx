@@ -29,7 +29,7 @@ export default function RootLayout({
           <ReactQueryProvider>{children}</ReactQueryProvider>
         </NuqsAdapter>
 
-        <Toaster />
+        <Toaster position="top-center" />
       </body>
     </html>
   );
