@@ -49,6 +49,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 const SignUpForm = () => {
   const router = useRouter();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,10 +73,12 @@ const SignUpForm = () => {
         onError: (ctx) => {
           if (ctx.error.code === "USER_ALREADY_EXISTS") {
             toast.error("E-mail já cadastrado.");
+
             return form.setError("email", {
               message: "E-mail já cadastrado.",
             });
           }
+
           toast.error(ctx.error.message);
         },
       },
@@ -169,7 +172,7 @@ const SignUpForm = () => {
               {form.formState.isSubmitting && (
                 <Loader2 className="animate-spin" />
               )}
-              Criar conta
+              {!form.formState.isSubmitting && "Criar conta"}
             </Button>
           </CardFooter>
         </form>

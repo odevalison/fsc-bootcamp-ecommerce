@@ -30,10 +30,11 @@ export const addProductToCart = async (data: AddToProductCartSchema) => {
   }
 
   const cart = await db.query.cartTable.findFirst({
-    where: (cartTable, { eq }) => eq(cartTable.userId, session.user.id),
+    where: (cart, { eq }) => eq(cart.userId, session.user.id),
   });
 
   let cartId = cart?.id;
+
   if (!cartId) {
     const [newCart] = await db
       .insert(cartTable)
@@ -54,9 +55,7 @@ export const addProductToCart = async (data: AddToProductCartSchema) => {
   if (cartItem) {
     await db
       .update(cartItemTable)
-      .set({
-        quantity: cartItem.quantity + data.quantity,
-      })
+      .set({ quantity: cartItem.quantity + data.quantity })
       .where(eq(cartItemTable.id, cartItem.id));
 
     return;

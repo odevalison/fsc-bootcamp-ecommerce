@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ShoppingCart } from "lucide-react";
-import Image from "next/image";
 
 import { getCart } from "@/actions/get-cart";
 import { formatCentsToBRL } from "@/helpers/money";
@@ -48,12 +47,13 @@ const Cart = () => {
                   <div key={item.id}>
                     <CartItem
                       key={item.id}
-                      id={item.id}
+                      cartItemId={item.id}
                       productName={item.productVariant.product.name}
-                      quantity={item.quantity}
+                      variantId={item.productVariantId}
                       variantImageUrl={item.productVariant.imageUrl}
                       variantName={item.productVariant.name}
                       variantPriceInCents={item.productVariant.priceInCents}
+                      quantity={item.quantity}
                     />
                   </div>
                 ))}

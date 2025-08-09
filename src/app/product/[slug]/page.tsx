@@ -1,4 +1,3 @@
-import { eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
@@ -7,7 +6,6 @@ import Footer from "@/components/common/footer";
 import Header from "@/components/common/header";
 import ProductsList from "@/components/common/products-list";
 import { db } from "@/db";
-import { productTable, productVariantTable } from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
 
 import ProductActions from "./components/product-actions";
@@ -24,25 +22,26 @@ const ProductPage = async ({ params, searchParams }: ProductPageProps) => {
   const { variant: variantSlug } = await loadSearchParams(searchParams);
 
   const product = await db.query.productTable.findFirst({
-    where: eq(productTable.slug, slug),
-    with: {
-      variants: true,
-    },
+    where: (product, { eq }) => eq(product.slug, slug),
+    with: { variants: true },
   });
 
   const variant = await db.query.productVariantTable.findFirst({
-    where: eq(productVariantTable.slug, variantSlug),
+    where: (productVariant, { eq }) => eq(productVariant.slug, variantSlug),
   });
 
-  if (!product || !variant) {
+  if (!product) {
+    return notFound();
+  }
+
+  if (!variant) {
     return notFound();
   }
 
   const likelyProducts = await db.query.productTable.findMany({
-    where: eq(productTable.categoryId, product.categoryId),
-    with: {
-      variants: true,
-    },
+    where: (productTable, { eq }) =>
+      eq(productTable.categoryId, product.categoryId),
+    with: { variants: true },
   });
 
   return (

@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 
 import AddToCartButton from "./add-to-cart-button";
 
-interface ProductActionProps {
+interface ProductActionsProps {
   variantId: string;
 }
 
-const ProductAction = ({ variantId }: ProductActionProps) => {
+const ProductActions = ({ variantId }: ProductActionsProps) => {
   const [quantity, setQuantity] = useQueryState(
     "quantity",
     parseAsInteger.withDefault(1),
@@ -56,4 +56,4 @@ const ProductAction = ({ variantId }: ProductActionProps) => {
   );
 };
 
-export default ProductAction;
+export default ProductActions;
