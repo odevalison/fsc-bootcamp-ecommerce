@@ -53,6 +53,7 @@ export const addProductToCart = async (data: AddToProductCartSchema) => {
   });
 
   if (cartItem) {
+    console.log("Cart item found, updating quantity");
     await db
       .update(cartItemTable)
       .set({ quantity: cartItem.quantity + data.quantity })

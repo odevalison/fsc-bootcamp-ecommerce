@@ -32,9 +32,7 @@ const ProductPage = async ({ params, searchParams }: ProductPageProps) => {
 
   if (!product) {
     return notFound();
-  }
-
-  if (!variant) {
+  } else if (!variant) {
     return notFound();
   }
 

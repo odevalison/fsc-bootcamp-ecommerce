@@ -1,3 +1,5 @@
+"use client";
+
 import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -62,7 +64,7 @@ const CartItem = ({
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <Image
           width={70}
           height={70}
