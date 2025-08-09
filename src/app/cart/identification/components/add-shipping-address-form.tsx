@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAddShippingAddress } from "@/hooks/mutations/use-add-shipping-address";
+import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
 
 const newAddressFormSchema = z.object({
   email: z.email("Email inválido").trim().min(1, "Email obrigatório."),
@@ -31,7 +32,7 @@ const newAddressFormSchema = z.object({
 
 type NewAddressFormSchema = z.infer<typeof newAddressFormSchema>;
 
-const NewAddressForm = () => {
+const AddShippingAddressForm = () => {
   const form = useForm<NewAddressFormSchema>({
     resolver: zodResolver(newAddressFormSchema),
     mode: "onSubmit",
@@ -51,17 +52,23 @@ const NewAddressForm = () => {
   });
 
   const addNewShippingAddressMutation = useAddShippingAddress();
+  const updateCartShippingAddressMutation = useUpdateCartShippingAddress();
 
-  const onSubmit = (data: NewAddressFormSchema) => {
-    addNewShippingAddressMutation.mutate(data, {
-      onSuccess: () => {
-        toast.success("Endereço adicionado com sucesso.");
-        form.reset();
-      },
-      onError: () => {
-        toast.error("Erro ao adicionar endereço.");
-      },
-    });
+  const onSubmit = async (data: NewAddressFormSchema) => {
+    try {
+      const newAddress = await addNewShippingAddressMutation.mutateAsync(data);
+
+      await updateCartShippingAddressMutation.mutateAsync({
+        shippingAddressId: newAddress.id,
+      });
+
+      toast.success("Endereço adicionado com sucesso.");
+      form.reset();
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Erro ao adicionar endereço, tente novamente.");
+      }
+    }
   };
 
   return (
@@ -243,4 +250,4 @@ const NewAddressForm = () => {
   );
 };
 
-export default NewAddressForm;
+export default AddShippingAddressForm;

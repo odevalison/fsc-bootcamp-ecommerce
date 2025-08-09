@@ -6,14 +6,12 @@ import type { shippingAdressTable } from "@/db/schema";
 export const getUseShippingAddressesQueryKey = () =>
   ["get-shipping-addresses"] as const;
 
-export const useShippingAddresses = ({
-  initialData,
-}: {
-  initialData?: (typeof shippingAdressTable.$inferSelect)[];
+export const useShippingAddresses = (params?: {
+  initialData: (typeof shippingAdressTable.$inferSelect)[];
 }) => {
   return useQuery({
     queryKey: getUseShippingAddressesQueryKey(),
     queryFn: () => getUserShippingAddresses(),
-    initialData,
+    initialData: params?.initialData,
   });
 };

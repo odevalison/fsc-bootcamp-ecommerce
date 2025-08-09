@@ -16,15 +16,27 @@ const IdentificationPage = async () => {
   }
 
   const cart = await db.query.cartTable.findFirst({
-    where: (cartTable, { eq }) => eq(cartTable.userId, session.user.id),
-    with: { items: true },
+    where: (cart, { eq }) => eq(cart.userId, session.user.id),
+    with: {
+      items: {
+        with: {
+          productVariant: {
+            with: {
+              product: true,
+            },
+          },
+        },
+      },
+    },
   });
   if (!cart || !cart?.items.length) {
     redirect("/");
   }
 
   const shippingAddresses = await db.query.shippingAdressTable.findMany({
-    where: (address, { eq }) => eq(address.userId, session.user.id),
+    where: (shippingAddress, { eq }) =>
+      eq(shippingAddress.userId, session.user.id),
+    orderBy: (shippingAddress, { desc }) => [desc(shippingAddress.createdAt)],
   });
 
   return (
@@ -32,7 +44,10 @@ const IdentificationPage = async () => {
       <Header />
 
       <div className="px-5">
-        <Addresses shippingAddresses={shippingAddresses} />
+        <Addresses
+          defaultShippingAddressId={cart?.shippingAdressId || null}
+          initialShippingAddresses={shippingAddresses}
+        />
       </div>
     </div>
   );

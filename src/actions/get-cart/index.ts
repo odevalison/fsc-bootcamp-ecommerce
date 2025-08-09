@@ -29,13 +29,10 @@ export const getCart = async () => {
       },
     },
   });
-
   if (!cart) {
     const [newCart] = await db
       .insert(cartTable)
-      .values({
-        userId: session.user.id,
-      })
+      .values({ userId: session.user.id })
       .returning();
 
     return {
@@ -47,9 +44,8 @@ export const getCart = async () => {
 
   return {
     ...cart,
-    totalPriceInCents: cart.items.reduce(
-      (acc, item) => acc + item.productVariant.priceInCents * item.quantity,
-      0,
-    ),
+    totalPriceInCents: cart.items.reduce((totalAcc, item) => {
+      return totalAcc + item.productVariant.priceInCents * item.quantity;
+    }, 0),
   };
 };

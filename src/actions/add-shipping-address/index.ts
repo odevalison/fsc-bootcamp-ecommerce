@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { db } from "@/db";
@@ -25,6 +26,8 @@ export const addShippingAddress = async (data: AddShippingAddressSchema) => {
     .insert(shippingAdressTable)
     .values({ ...data, country: "Brasil", userId: session.user.id })
     .returning();
+
+  revalidatePath("/cart/identification");
 
   return shippingAddress;
 };
