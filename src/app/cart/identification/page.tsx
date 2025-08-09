@@ -23,12 +23,16 @@ const IdentificationPage = async () => {
     redirect("/");
   }
 
+  const shippingAddresses = await db.query.shippingAdressTable.findMany({
+    where: (address, { eq }) => eq(address.userId, session.user.id),
+  });
+
   return (
     <div>
       <Header />
 
       <div className="px-5">
-        <Addresses />
+        <Addresses shippingAddresses={shippingAddresses} />
       </div>
     </div>
   );

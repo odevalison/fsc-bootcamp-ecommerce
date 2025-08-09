@@ -6,13 +6,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
+import type { shippingAdressTable } from "@/db/schema";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
 import NewAddressForm from "./new-address-form";
 
-const Address = () => {
+interface AddressesProps {
+  shippingAddresses: (typeof shippingAdressTable.$inferSelect)[];
+}
+
+const Addresses = ({ shippingAddresses }: AddressesProps) => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
-  const { data: userAddresses, isPending } = useShippingAddresses();
+  const { data: userAddresses } = useShippingAddresses({
+    initialData: shippingAddresses,
+  });
 
   return (
     <Card>
@@ -21,7 +28,6 @@ const Address = () => {
       </CardHeader>
 
       <CardContent className="space-y-3">
-        {isPending && <p>Buscando endereços...</p>}
         {userAddresses &&
           userAddresses.map((address) => (
             <RadioGroup
@@ -71,4 +77,4 @@ const Address = () => {
   );
 };
 
-export default Address;
+export default Addresses;
