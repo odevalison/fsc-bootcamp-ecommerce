@@ -14,6 +14,7 @@ import type { shippingAdressTable } from "@/db/schema";
 import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
+import { formatAddress } from "../../helpers/address";
 import AddShippingAddressForm from "./add-shipping-address-form";
 
 interface AddressesProps {
@@ -71,11 +72,7 @@ const Addresses = ({
               <CardContent>
                 <div className="flex items-center space-x-6">
                   <RadioGroupItem value={address.id} id={address.id} />
-                  <Label htmlFor={address.id}>
-                    {address.recipientName} - {address.street}, {address.number}
-                    , {address.complement}, {address.neighborhood},{" "}
-                    {address.city} - {address.state}, CEP - {address.zipCode}
-                  </Label>
+                  <Label htmlFor={address.id}>{formatAddress(address)}</Label>
                 </div>
               </CardContent>
             </Card>

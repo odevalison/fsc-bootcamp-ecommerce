@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCentsToBRL } from "@/helpers/money";
@@ -72,7 +71,7 @@ const CartSummary = ({
                   <p className="text-xs font-semibold">{product.name}</p>
 
                   <p className="text-muted-foreground text-xs font-medium">
-                    {product.variantName} | {product.quantity}
+                    {product.variantName} | {product.quantity}x
                   </p>
 
                   <p className="text-sm font-semibold">

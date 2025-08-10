@@ -3,13 +3,21 @@ import { redirect } from "next/navigation";
 
 import Footer from "@/components/common/footer";
 import Header from "@/components/common/header";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { db } from "@/db";
 import { auth } from "@/lib/auth";
 
 import CartSummary from "../components/cart-summary";
-import Addresses from "./components/addresses";
+import { formatAddress } from "../helpers/address";
 
-const IdentificationPage = async () => {
+const ConfirmationPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -20,6 +28,7 @@ const IdentificationPage = async () => {
   const cart = await db.query.cartTable.findFirst({
     where: (cart, { eq }) => eq(cart.userId, session.user.id),
     with: {
+      shippingAdress: true,
       items: {
         with: {
           productVariant: {
@@ -35,24 +44,39 @@ const IdentificationPage = async () => {
     redirect("/");
   }
 
-  const shippingAddresses = await db.query.shippingAdressTable.findMany({
-    where: (shippingAddress, { eq }) =>
-      eq(shippingAddress.userId, session.user.id),
-    orderBy: (shippingAddress, { desc }) => [desc(shippingAddress.createdAt)],
-  });
   const cartTotalInCents = cart?.items.reduce((acc, item) => {
     return (acc += item.productVariant.priceInCents * item.quantity);
   }, 0);
+
+  if (!cart?.shippingAdress) {
+    redirect("/cart/identification");
+  }
 
   return (
     <>
       <Header />
 
       <div className="space-y-4 px-5">
-        <Addresses
-          defaultShippingAddressId={cart?.shippingAdressId || null}
-          initialShippingAddresses={shippingAddresses}
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Identificação</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Card>
+              <CardContent>
+                <p className="text-sm font-medium">
+                  {formatAddress(cart.shippingAdress)}
+                </p>
+              </CardContent>
+            </Card>
+          </CardContent>
+
+          <CardFooter>
+            <Button size="lg" className="w-full rounded-full">
+              Finalizar a compra
+            </Button>
+          </CardFooter>
+        </Card>
 
         <CartSummary
           subtotalInCents={cartTotalInCents}
@@ -75,4 +99,4 @@ const IdentificationPage = async () => {
   );
 };
 
-export default IdentificationPage;
+export default ConfirmationPage;
