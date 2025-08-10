@@ -79,13 +79,6 @@ export const finishOrder = async () => {
         priceInCents: totalPriceInCents,
       }));
     await tx.insert(orderItemTable).values(orderItemsPayload);
-
-    await tx
-      .delete(cartTable)
-      .where(
-        and(eq(cartTable.id, cart.id), eq(cartTable.userId, session.user.id)),
-      );
-    await tx.delete(cartItemTable).where(eq(cartItemTable.cartId, cart.id));
   });
   if (!orderId) {
     throw new Error("Failed to create order");
