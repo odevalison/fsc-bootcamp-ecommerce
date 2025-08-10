@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 import { db } from "@/db";
@@ -32,21 +32,33 @@ export const finishOrder = async () => {
   if (!cart) {
     throw new Error("Cart not found");
   }
-  if (!cart.shippingAddress) {
-    throw new Error("Shipping address not found");
-  }
-
-  const totalPriceInCents = cart.items.reduce((acc, item) => {
-    return (acc += item.productVariant.priceInCents * item.quantity);
-  }, 0);
 
   await db.transaction(async (tx) => {
+    if (!cart.shippingAddress) {
+      throw new Error("Shipping address not found");
+    }
+
+    const totalPriceInCents = cart.items.reduce((acc, item) => {
+      return (acc += item.productVariant.priceInCents * item.quantity);
+    }, 0);
+
     const [order] = await tx
       .insert(orderTable)
       .values({
-        ...cart.shippingAddress!,
         userId: session.user.id,
-        shippingAddressId: cart.shippingAddress!.id,
+        shippingAddressId: cart.shippingAddress.id,
+        zipCode: cart.shippingAddress.zipCode,
+        city: cart.shippingAddress.city,
+        country: cart.shippingAddress.country,
+        cpfOrCnpj: cart.shippingAddress.cpfOrCnpj,
+        email: cart.shippingAddress.email,
+        neighborhood: cart.shippingAddress.neighborhood,
+        number: cart.shippingAddress.number,
+        phone: cart.shippingAddress.phone,
+        recipientName: cart.shippingAddress.recipientName,
+        state: cart.shippingAddress.state,
+        street: cart.shippingAddress.street,
+        complement: cart.shippingAddress.complement,
         totalPriceInCents,
       })
       .returning();
@@ -64,6 +76,11 @@ export const finishOrder = async () => {
       }));
     await tx.insert(orderItemTable).values(orderItemsPayload);
 
+    await tx
+      .delete(cartTable)
+      .where(
+        and(eq(cartTable.id, cart.id), eq(cartTable.userId, session.user.id)),
+      );
     await tx.delete(cartItemTable).where(eq(cartItemTable.cartId, cart.id));
   });
 };
