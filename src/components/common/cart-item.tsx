@@ -1,6 +1,6 @@
 "use client";
 
-import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { MinusIcon, PlusIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
@@ -63,52 +63,72 @@ const CartItem = ({
   };
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <Image
-          width={70}
-          height={70}
-          src={variantImageUrl}
-          alt={productName}
-          className="rounded-lg"
-        />
+    <div className="relative flex items-center justify-between">
+      <div className="flex w-full justify-between">
+        <div className="flex items-center gap-3">
+          <Image
+            width={86}
+            height={86}
+            src={variantImageUrl}
+            alt={productName}
+            className="rounded-lg"
+          />
 
-        <div className="flex flex-col gap-1">
-          <p className="text-xs font-semibold">{productName}</p>
-          <p className="text-muted-foreground text-xs font-medium">
-            {variantName}
-          </p>
+          <div className="flex flex-col gap-3">
+            <div>
+              <p className="text-xs font-semibold">{productName}</p>
+              <p className="text-muted-foreground text-xs font-medium">
+                {variantName}
+              </p>
+            </div>
 
-          <div className="flex w-26 items-center justify-between rounded-lg border">
-            <Button
-              onClick={handleDecreaseProductQuantity}
-              className="size-6"
-              variant="ghost"
-            >
-              <MinusIcon />
-            </Button>
+            <div className="flex h-10 w-24 items-center justify-evenly gap-2 rounded-xl border">
+              {quantity > 1 ? (
+                <Button
+                  onClick={handleDecreaseProductQuantity}
+                  variant="ghost"
+                  className="size-4"
+                >
+                  <MinusIcon />
+                </Button>
+              ) : (
+                <Button
+                  variant="ghost"
+                  onClick={handleDeleteProduct}
+                  className="size-4"
+                >
+                  <Trash2 />
+                </Button>
+              )}
 
-            <p className="text-sm font-medium">{quantity}</p>
+              <p className="text-sm font-medium">{quantity}</p>
 
-            <Button
-              onClick={handleIncreaseProductQuantity}
-              className="size-6"
-              variant="ghost"
-            >
-              <PlusIcon />
-            </Button>
+              <Button
+                onClick={handleIncreaseProductQuantity}
+                variant="ghost"
+                className="size-4"
+              >
+                <PlusIcon />
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex flex-col items-end justify-center gap-2">
-        <Button variant="outline" size="icon" onClick={handleDeleteProduct}>
-          <TrashIcon />
-        </Button>
+        <div className="flex flex-col items-end justify-between">
+          <p className="text-sm font-semibold">
+            {formatCentsToBRL(variantPriceInCents * quantity)}
+          </p>
 
-        <p className="text-sm font-bold">
-          {formatCentsToBRL(variantPriceInCents * quantity)}
-        </p>
+          {quantity > 1 && (
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-10 w-10 rounded-xl"
+            >
+              <Trash2 className="size-5" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -16,7 +16,8 @@ const CategorySelector = ({ categories }: CategorySelectorProps) => {
           <Button
             key={category.id}
             variant="ghost"
-            className="rounded-full bg-white text-xs font-semibold"
+            asChild
+            className="h-10 rounded-full bg-white text-xs font-semibold"
           >
             <Link prefetch href={`/category/${category.slug}`}>
               {category.name}

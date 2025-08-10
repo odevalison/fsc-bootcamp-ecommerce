@@ -25,8 +25,6 @@ const Home = async () => {
 
   return (
     <>
-      <Header />
-
       <div className="space-y-6">
         <div className="px-5">
           <Image
@@ -59,8 +57,6 @@ const Home = async () => {
         </div>
 
         <ProductsList products={newlyCreatedProducts} title="Novos produtos" />
-
-        <Footer />
       </div>
     </>
   );

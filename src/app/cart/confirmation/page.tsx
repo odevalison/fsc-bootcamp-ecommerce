@@ -54,8 +54,6 @@ const ConfirmationPage = async () => {
 
   return (
     <>
-      <Header />
-
       <div className="space-y-4 px-5">
         <Card>
           <CardHeader>
@@ -88,10 +86,6 @@ const ConfirmationPage = async () => {
             variantName: item.productVariant.name,
           }))}
         />
-      </div>
-
-      <div className="mt-12">
-        <Footer />
       </div>
     </>
   );

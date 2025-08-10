@@ -46,8 +46,6 @@ const IdentificationPage = async () => {
 
   return (
     <>
-      <Header />
-
       <div className="space-y-4 px-5">
         <Addresses
           defaultShippingAddressId={cart?.shippingAddressId || null}
@@ -66,10 +64,6 @@ const IdentificationPage = async () => {
             variantName: item.productVariant.name,
           }))}
         />
-      </div>
-
-      <div className="mt-12">
-        <Footer />
       </div>
     </>
   );

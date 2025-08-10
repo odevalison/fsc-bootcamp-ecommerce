@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
+import Footer from "@/components/common/footer";
+import Header from "@/components/common/header";
 import { Toaster } from "@/components/ui/sonner";
 import ReactQueryProvider from "@/providers/react-query";
 
@@ -26,7 +28,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
         <NuqsAdapter>
-          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <ReactQueryProvider>
+            <Header className="sticky top-0" />
+            {children}
+            <div className="mt-12">
+              <Footer className="sticky bottom-0" />
+            </div>
+          </ReactQueryProvider>
         </NuqsAdapter>
 
         <Toaster position="top-center" />

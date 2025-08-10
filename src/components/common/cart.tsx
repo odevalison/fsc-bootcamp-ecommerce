@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
+import { ShoppingBagIcon } from "lucide-react";
 import Link from "next/link";
 
 import { formatCentsToBRL } from "@/helpers/money";
@@ -11,6 +11,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -24,8 +25,8 @@ const Cart = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon">
-          <ShoppingCart />
+        <Button variant="ghost" size="icon">
+          <ShoppingBagIcon className="text-muted-foreground size-6" />
         </Button>
       </SheetTrigger>
 
@@ -57,9 +58,7 @@ const Cart = () => {
           </div>
 
           {(cart?.items?.length as number) > 0 && (
-            <div className="flex flex-col gap-4">
-              <Separator />
-
+            <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between text-xs">
                 <p>Subtotal</p>
                 <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
@@ -67,21 +66,18 @@ const Cart = () => {
 
               <Separator />
 
-              <div className="flex items-center justify-between text-xs">
-                <p>Entrega</p>
-                <p>Grátis</p>
-              </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between text-xs">
-                <p>Total</p>
-                <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
-              </div>
-
-              <Button size="lg" className="mt-5 rounded-full">
+              <Button size="lg" className="mt-4 rounded-full" asChild>
                 <Link href="/cart/identification">Finalizar compra</Link>
               </Button>
+
+              <SheetClose asChild>
+                <Button
+                  variant="link"
+                  className="text-accent-foreground font-medium"
+                >
+                  Continuar comprando
+                </Button>
+              </SheetClose>
             </div>
           )}
         </div>

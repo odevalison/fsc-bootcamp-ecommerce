@@ -1,13 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { db } from "@/db";
+import { cn } from "@/lib/utils";
+
 import Cart from "./cart";
 import Menu from "./menu";
 
-const Header = () => {
+const Header = async ({ className }: { className?: string }) => {
+  const categories = await db.query.categoryTable.findMany({});
+
   return (
     <>
-      <header className="flex items-center justify-between p-5">
+      <header
+        className={cn(
+          "flex items-center justify-between bg-white p-5",
+          className,
+        )}
+      >
         <Link href="/">
           <Image
             priority
@@ -18,9 +28,9 @@ const Header = () => {
           />
         </Link>
 
-        <div className="flex items-center gap-2">
-          <Menu />
+        <div className="flex items-center gap-4">
           <Cart />
+          <Menu categories={categories} />
         </div>
       </header>
     </>

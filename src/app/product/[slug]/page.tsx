@@ -44,8 +44,6 @@ const ProductPage = async ({ params, searchParams }: ProductPageProps) => {
 
   return (
     <>
-      <Header />
-
       <div className="flex flex-col space-y-6">
         <Image
           width={0}
@@ -79,8 +77,6 @@ const ProductPage = async ({ params, searchParams }: ProductPageProps) => {
         </div>
 
         <ProductsList title="Talvez você goste" products={likelyProducts} />
-
-        <Footer />
       </div>
     </>
   );

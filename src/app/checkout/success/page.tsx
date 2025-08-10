@@ -15,8 +15,6 @@ import {
 const CheckoutSuccessPage = () => {
   return (
     <>
-      <Header />
-
       <Dialog open={true}>
         <DialogContent className="text-center">
           <CardHeader>

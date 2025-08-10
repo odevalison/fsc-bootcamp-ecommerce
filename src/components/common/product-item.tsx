@@ -24,22 +24,25 @@ const ProductItem = ({ product, textsContainerMaxWidth }: ProductItemProps) => {
       <Image
         width={0}
         height={0}
-        sizes="100vw"
+        sizes="100%"
         src={firstVariant.imageUrl}
         alt={firstVariant.name}
-        className="h-auto w-full rounded-3xl"
+        className="h-[260px] w-[200px] rounded-3xl object-cover"
       />
 
       <div
         className={cn(
-          "flex max-w-[200px] flex-col gap-1",
+          "flex max-w-[200px] flex-col gap-6",
           textsContainerMaxWidth,
         )}
       >
-        <p className="truncate text-sm font-medium">{product.name}</p>
-        <p className="text-muted-foreground truncate text-xs font-medium">
-          {product.description}
-        </p>
+        <div className="space-y-1">
+          <p className="truncate text-sm font-medium">{product.name}</p>
+          <p className="text-muted-foreground truncate text-xs font-medium">
+            {product.description}
+          </p>
+        </div>
+
         <p className="truncate text-sm font-semibold">
           {formatCentsToBRL(firstVariant.priceInCents)}
         </p>
