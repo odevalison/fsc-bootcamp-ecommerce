@@ -24,7 +24,7 @@ export const updateCartShippingAddress = async (
     throw new Error("Unauthorized!");
   }
 
-  const shippingAddress = await db.query.shippingAdressTable.findFirst({
+  const shippingAddress = await db.query.shippingAddressTable.findFirst({
     where: (shippingAddress, { eq, and }) =>
       and(
         eq(shippingAddress.userId, session.user.id),
@@ -44,6 +44,6 @@ export const updateCartShippingAddress = async (
 
   await db
     .update(cartTable)
-    .set({ shippingAdressId: data.shippingAddressId })
+    .set({ shippingAddressId: data.shippingAddressId })
     .where(eq(cartTable.userId, session.user.id));
 };

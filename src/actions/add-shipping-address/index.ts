@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { db } from "@/db";
-import { shippingAdressTable } from "@/db/schema";
+import { shippingAddressTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import {
@@ -23,7 +23,7 @@ export const addShippingAddress = async (data: AddShippingAddressSchema) => {
   }
 
   const [shippingAddress] = await db
-    .insert(shippingAdressTable)
+    .insert(shippingAddressTable)
     .values({ ...data, country: "Brasil", userId: session.user.id })
     .returning();
 

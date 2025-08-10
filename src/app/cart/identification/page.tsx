@@ -35,7 +35,7 @@ const IdentificationPage = async () => {
     redirect("/");
   }
 
-  const shippingAddresses = await db.query.shippingAdressTable.findMany({
+  const shippingAddresses = await db.query.shippingAddressTable.findMany({
     where: (shippingAddress, { eq }) =>
       eq(shippingAddress.userId, session.user.id),
     orderBy: (shippingAddress, { desc }) => [desc(shippingAddress.createdAt)],
@@ -50,7 +50,7 @@ const IdentificationPage = async () => {
 
       <div className="space-y-4 px-5">
         <Addresses
-          defaultShippingAddressId={cart?.shippingAdressId || null}
+          defaultShippingAddressId={cart?.shippingAddressId || null}
           initialShippingAddresses={shippingAddresses}
         />
 

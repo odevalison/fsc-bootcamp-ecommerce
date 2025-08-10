@@ -13,7 +13,7 @@ export const getUserShippingAddresses = async () => {
     throw new Error("You don't have permission to do it!");
   }
 
-  const addresses = await db.query.shippingAdressTable.findMany({
+  const addresses = await db.query.shippingAddressTable.findMany({
     where: (shippingAddress, { eq }) =>
       eq(shippingAddress.userId, session.user.id),
     orderBy: (shippingAddress, { desc }) => [desc(shippingAddress.createdAt)],

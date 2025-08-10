@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import type { shippingAdressTable } from "@/db/schema";
+import { shippingAddressTable } from "@/db/schema";
 import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
@@ -19,7 +19,7 @@ import AddShippingAddressForm from "./add-shipping-address-form";
 
 interface AddressesProps {
   defaultShippingAddressId: string | null;
-  initialShippingAddresses: (typeof shippingAdressTable.$inferSelect)[];
+  initialShippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
 }
 
 const Addresses = ({

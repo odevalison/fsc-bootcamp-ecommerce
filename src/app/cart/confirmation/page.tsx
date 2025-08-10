@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 
 import Footer from "@/components/common/footer";
 import Header from "@/components/common/header";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,6 +15,7 @@ import { auth } from "@/lib/auth";
 
 import CartSummary from "../components/cart-summary";
 import { formatAddress } from "../helpers/address";
+import FinishOrderButton from "./components/finish-order-button";
 
 const ConfirmationPage = async () => {
   const session = await auth.api.getSession({
@@ -28,7 +28,7 @@ const ConfirmationPage = async () => {
   const cart = await db.query.cartTable.findFirst({
     where: (cart, { eq }) => eq(cart.userId, session.user.id),
     with: {
-      shippingAdress: true,
+      shippingAddress: true,
       items: {
         with: {
           productVariant: {
@@ -48,7 +48,7 @@ const ConfirmationPage = async () => {
     return (acc += item.productVariant.priceInCents * item.quantity);
   }, 0);
 
-  if (!cart?.shippingAdress) {
+  if (!cart?.shippingAddress) {
     redirect("/cart/identification");
   }
 
@@ -65,16 +65,14 @@ const ConfirmationPage = async () => {
             <Card>
               <CardContent>
                 <p className="text-sm font-medium">
-                  {formatAddress(cart.shippingAdress)}
+                  {formatAddress(cart.shippingAddress)}
                 </p>
               </CardContent>
             </Card>
           </CardContent>
 
           <CardFooter>
-            <Button size="lg" className="w-full rounded-full">
-              Finalizar a compra
-            </Button>
+            <FinishOrderButton />
           </CardFooter>
         </Card>
 
