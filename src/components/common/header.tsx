@@ -7,8 +7,12 @@ import { cn } from "@/lib/utils";
 import Cart from "./cart";
 import Menu from "./menu";
 
+const getCategories = async () => {
+  return await db.query.categoryTable.findMany({});
+};
+
 const Header = async ({ className }: { className?: string }) => {
-  const categories = await db.query.categoryTable.findMany({});
+  const categories = await getCategories();
 
   return (
     <>

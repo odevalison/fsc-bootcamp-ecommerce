@@ -4,6 +4,11 @@ import { MinusIcon, PlusIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
+import type {
+  cartItemTable,
+  productTable,
+  productVariantTable,
+} from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
 import { useDecreaseCartProdudct } from "@/hooks/mutations/use-decrease-cart-product";
 import { useIncreaseCartProduct } from "@/hooks/mutations/use-increase-cart-product";
@@ -12,28 +17,19 @@ import { useRemoveCartProduct } from "@/hooks/mutations/use-remove-cart-product"
 import { Button } from "../ui/button";
 
 interface CartItemProps {
-  cartItemId: string;
-  productName: string;
-  variantId: string;
-  variantName: string;
-  variantImageUrl: string;
-  variantPriceInCents: number;
-  quantity: number;
+  item: typeof cartItemTable.$inferSelect & {
+    productVariant: typeof productVariantTable.$inferSelect & {
+      product: typeof productTable.$inferSelect;
+    };
+  };
 }
 
-const CartItem = ({
-  cartItemId,
-  variantId,
-  variantImageUrl,
-  productName,
-  variantName,
-  variantPriceInCents,
-  quantity,
-}: CartItemProps) => {
-  const removeCartProductMutation = useRemoveCartProduct(cartItemId);
-  const decreaseCartProductQuantityMutation =
-    useDecreaseCartProdudct(cartItemId);
-  const increaseCartProductQuantityMutation = useIncreaseCartProduct(variantId);
+const CartItem = ({ item }: CartItemProps) => {
+  const removeCartProductMutation = useRemoveCartProduct(item.id);
+  const decreaseCartProductQuantityMutation = useDecreaseCartProdudct(item.id);
+  const increaseCartProductQuantityMutation = useIncreaseCartProduct(
+    item.productVariant.id,
+  );
 
   const handleDeleteProduct = () => {
     removeCartProductMutation.mutate(undefined, {
@@ -69,21 +65,23 @@ const CartItem = ({
           <Image
             width={86}
             height={86}
-            src={variantImageUrl}
-            alt={productName}
+            src={item.productVariant.imageUrl}
+            alt={item.productVariant.product.name}
             className="rounded-lg"
           />
 
           <div className="flex flex-col gap-3">
             <div>
-              <p className="text-xs font-semibold">{productName}</p>
+              <p className="text-xs font-semibold">
+                {item.productVariant.product.name}
+              </p>
               <p className="text-muted-foreground text-xs font-medium">
-                {variantName}
+                {item.productVariant.name}
               </p>
             </div>
 
             <div className="flex h-10 w-24 items-center justify-evenly gap-2 rounded-xl border">
-              {quantity > 1 ? (
+              {item.quantity > 1 ? (
                 <Button
                   onClick={handleDecreaseProductQuantity}
                   variant="ghost"
@@ -101,7 +99,7 @@ const CartItem = ({
                 </Button>
               )}
 
-              <p className="text-sm font-medium">{quantity}</p>
+              <p className="text-sm font-medium">{item.quantity}</p>
 
               <Button
                 onClick={handleIncreaseProductQuantity}
@@ -116,10 +114,10 @@ const CartItem = ({
 
         <div className="flex flex-col items-end justify-between">
           <p className="text-sm font-semibold">
-            {formatCentsToBRL(variantPriceInCents * quantity)}
+            {formatCentsToBRL(item.productVariant.priceInCents * item.quantity)}
           </p>
 
-          {quantity > 1 && (
+          {item.quantity > 1 && (
             <Button
               variant="outline"
               size="icon"

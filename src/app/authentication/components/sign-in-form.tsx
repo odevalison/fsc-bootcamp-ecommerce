@@ -21,7 +21,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -90,13 +89,12 @@ const SignInForm = () => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <CardContent className="grid gap-6">
+          <CardContent className="grid gap-3">
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>E-mail</FormLabel>
                   <FormControl>
                     <Input placeholder="Digite seu e-mail" {...field} />
                   </FormControl>
@@ -111,7 +109,6 @@ const SignInForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Senha</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -129,19 +126,21 @@ const SignInForm = () => {
             <Button
               type="submit"
               disabled={form.formState.isSubmitting}
-              className="flex w-full items-center justify-center"
+              size="lg"
+              className="flex w-full items-center justify-center rounded-full"
             >
               {form.formState.isSubmitting && (
                 <Loader2 className="animate-spin" />
               )}
-              {!form.formState.isSubmitting && "Entrar"}
+              Entrar
             </Button>
 
             <Button
               type="button"
               variant="outline"
+              size="lg"
               onClick={handleSignInWithGoogle}
-              className="w-full"
+              className="w-full rounded-full"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4">
                 <path

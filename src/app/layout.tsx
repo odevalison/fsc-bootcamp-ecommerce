@@ -31,9 +31,7 @@ export default function RootLayout({
           <ReactQueryProvider>
             <Header className="sticky top-0" />
             {children}
-            <div className="mt-12">
-              <Footer className="sticky bottom-0" />
-            </div>
+            <Footer className="static bottom-0 mt-12" />
           </ReactQueryProvider>
         </NuqsAdapter>
 

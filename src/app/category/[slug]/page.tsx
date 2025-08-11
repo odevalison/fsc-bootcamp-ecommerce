@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 
-import Header from "@/components/common/header";
 import ProductItem from "@/components/common/product-item";
 import { db } from "@/db";
 
@@ -8,38 +7,43 @@ interface CategoryPageProps {
   params: Promise<{ slug: string }>;
 }
 
-const CategoryPage = async ({ params }: CategoryPageProps) => {
-  const { slug } = await params;
-
+const getCategory = async (categorySlug: string) => {
   const category = await db.query.categoryTable.findFirst({
-    where: (category, { eq }) => eq(category.slug, slug),
+    where: (category, { eq }) => eq(category.slug, categorySlug),
   });
 
   if (!category) {
     return notFound();
   }
 
-  const products = await db.query.productTable.findMany({
+  return category;
+};
+
+const getCategoryProducts = async (
+  category: Awaited<ReturnType<typeof getCategory>>,
+) => {
+  return await db.query.productTable.findMany({
     where: (product, { eq }) => eq(product.categoryId, category.id),
     with: { variants: true },
   });
+};
+
+const CategoryPage = async ({ params }: CategoryPageProps) => {
+  const { slug: categorySlug } = await params;
+
+  const category = await getCategory(categorySlug);
+  const products = await getCategoryProducts(category);
 
   return (
-    <>
-      <div className="space-y-6 px-5">
-        <h2 className="text-xl font-semibold">{category.name}</h2>
+    <div className="space-y-6 px-5">
+      <h2 className="text-lg font-semibold">{category.name}</h2>
 
-        <div className="grid grid-cols-2 gap-4">
-          {products.map((product) => (
-            <ProductItem
-              key={product.id}
-              product={product}
-              textsContainerMaxWidth="max-w-full"
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-2 gap-x-3 gap-y-6">
+        {products.map((product) => (
+          <ProductItem key={product.id} product={product} />
+        ))}
       </div>
-    </>
+    </div>
   );
 };
 

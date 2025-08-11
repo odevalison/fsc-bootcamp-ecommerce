@@ -20,7 +20,7 @@ import {
 import CartItem from "./cart-item";
 
 const Cart = () => {
-  const { data: cart, isPending: cartIsLoading } = useCart();
+  const { data: cart } = useCart();
 
   return (
     <Sheet>
@@ -30,29 +30,27 @@ const Cart = () => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent>
+      <SheetContent className="rounded-tl-3xl rounded-bl-3xl">
         <SheetHeader>
-          <SheetTitle>Carrinho</SheetTitle>
+          <SheetTitle className="flex items-center gap-2">
+            <ShoppingBagIcon className="text-muted-foreground size-5" /> Sacola
+          </SheetTitle>
         </SheetHeader>
 
         <div className="flex h-full flex-col px-5 pb-5">
           <div className="flex h-full max-h-full flex-col overflow-hidden">
             <ScrollArea className="h-full">
               <div className="flex h-full flex-col gap-6">
-                {cartIsLoading && <p>Carregando carrinho...</p>}
+                {!!cart?.items.length &&
+                  cart?.items.map((item) => (
+                    <CartItem key={item.id} item={item} />
+                  ))}
 
-                {cart?.items.map((item) => (
-                  <CartItem
-                    key={item.id}
-                    cartItemId={item.id}
-                    productName={item.productVariant.product.name}
-                    variantId={item.productVariantId}
-                    variantImageUrl={item.productVariant.imageUrl}
-                    variantName={item.productVariant.name}
-                    variantPriceInCents={item.productVariant.priceInCents}
-                    quantity={item.quantity}
-                  />
-                ))}
+                {!cart?.items.length && (
+                  <p className="text-muted-foreground text-sm font-medium">
+                    Seu carrinho está vazio.
+                  </p>
+                )}
               </div>
             </ScrollArea>
           </div>
@@ -66,9 +64,11 @@ const Cart = () => {
 
               <Separator />
 
-              <Button size="lg" className="mt-4 rounded-full" asChild>
-                <Link href="/cart/identification">Finalizar compra</Link>
-              </Button>
+              <SheetClose asChild>
+                <Button size="lg" className="mt-4 rounded-full" asChild>
+                  <Link href="/cart/identification">Finalizar compra</Link>
+                </Button>
+              </SheetClose>
 
               <SheetClose asChild>
                 <Button

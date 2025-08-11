@@ -1,8 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import Footer from "@/components/common/footer";
-import Header from "@/components/common/header";
 import {
   Accordion,
   AccordionContent,
@@ -14,7 +12,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -24,15 +21,19 @@ import { auth } from "@/lib/auth";
 import OrderItem from "./components/order-item";
 import OrderSummary from "./components/order-summary";
 
-const MyOrdersPage = async () => {
+const getSession = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  if (!session?.user) {
-    redirect("/authentication");
+  if (!session) {
+    redirect("/");
   }
 
-  const orders = await db.query.orderTable.findMany({
+  return session;
+};
+
+const getOrders = async (session: Awaited<ReturnType<typeof getSession>>) => {
+  return await db.query.orderTable.findMany({
     where: (orders, { eq }) => eq(orders.userId, session.user.id),
     with: {
       items: {
@@ -40,6 +41,11 @@ const MyOrdersPage = async () => {
       },
     },
   });
+};
+
+const MyOrdersPage = async () => {
+  const session = await getSession();
+  const orders = await getOrders(session);
 
   return (
     <>

@@ -40,7 +40,7 @@ const Menu = ({ categories }: MenuProps) => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent>
+      <SheetContent className="rounded-tl-3xl rounded-bl-3xl">
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
@@ -63,7 +63,7 @@ const Menu = ({ categories }: MenuProps) => {
 
                   <div className="flex flex-col">
                     <p className="font-semibold">{session.user.name}</p>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-muted-foreground truncate text-xs">
                       {session.user.email}
                     </p>
                   </div>
@@ -92,7 +92,7 @@ const Menu = ({ categories }: MenuProps) => {
                     </Link>
                   </SheetClose>
 
-                  <SheetClose>
+                  <SheetClose asChild>
                     <Link
                       className="flex items-center gap-3 text-sm font-medium hover:underline"
                       href="/cart/identification"
@@ -107,12 +107,11 @@ const Menu = ({ categories }: MenuProps) => {
 
                 <div className="flex flex-col items-start space-y-5">
                   {categories.map((category) => (
-                    <SheetClose
-                      key={category.id}
-                      asChild
-                      className="text-sm font-medium text-black hover:underline"
-                    >
-                      <Link href={`/category/${category.slug}`}>
+                    <SheetClose key={category.id} asChild>
+                      <Link
+                        href={`/category/${category.slug}`}
+                        className="text-sm font-medium text-black hover:underline"
+                      >
                         {category.name}
                       </Link>
                     </SheetClose>
@@ -121,13 +120,16 @@ const Menu = ({ categories }: MenuProps) => {
 
                 <Separator />
 
-                <Button
-                  variant="ghost"
-                  className="text-muted-foreground space-x-3 text-sm font-medium"
-                >
-                  <LogOut className="size-4" />
-                  Sair da conta
-                </Button>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="text-muted-foreground space-x-3 text-sm font-medium"
+                    onClick={() => authClient.signOut()}
+                  >
+                    <LogOut className="size-4" />
+                    Sair da conta
+                  </Button>
+                </SheetClose>
               </div>
             </>
           ) : (
@@ -135,19 +137,21 @@ const Menu = ({ categories }: MenuProps) => {
               <div className="flex items-center justify-between">
                 <h2 className="font-semibold">Olá, faça seu login!</h2>
 
-                <Button
-                  asChild
-                  size="lg"
-                  className="flex items-center gap-3 rounded-full text-sm font-medium"
-                >
-                  <Link
-                    className="flex items-center gap-3 font-medium"
-                    href="/authentication"
+                <SheetClose asChild>
+                  <Button
+                    asChild
+                    size="lg"
+                    className="flex items-center gap-3 rounded-full text-sm font-medium"
                   >
-                    Login
-                    <LogInIcon />
-                  </Link>
-                </Button>
+                    <Link
+                      className="flex items-center gap-3 font-medium"
+                      href="/authentication"
+                    >
+                      Login
+                      <LogInIcon />
+                    </Link>
+                  </Button>
+                </SheetClose>
               </div>
 
               <Separator />

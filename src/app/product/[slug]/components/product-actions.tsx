@@ -17,11 +17,11 @@ const ProductActions = ({ variantId }: ProductActionsProps) => {
     parseAsInteger.withDefault(1),
   );
 
-  const handleIncrementQty = () => {
+  const handleIncreaseQuantity = () => {
     setQuantity((prev) => prev + 1);
   };
 
-  const handleDecrementQty = () => {
+  const handleDecreaseQuantity = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
@@ -32,13 +32,21 @@ const ProductActions = ({ variantId }: ProductActionsProps) => {
           <h3 className="font-medium">Quantidade</h3>
 
           <div className="flex w-28 items-center justify-between rounded-lg border">
-            <Button onClick={handleDecrementQty} size="icon" variant="ghost">
+            <Button
+              onClick={handleDecreaseQuantity}
+              size="icon"
+              variant="ghost"
+            >
               <MinusIcon />
             </Button>
 
-            <p>{quantity}</p>
+            <p className="text-sm font-medium">{quantity}</p>
 
-            <Button onClick={handleIncrementQty} size="icon" variant="ghost">
+            <Button
+              onClick={handleIncreaseQuantity}
+              size="icon"
+              variant="ghost"
+            >
               <PlusIcon />
             </Button>
           </div>
@@ -46,8 +54,7 @@ const ProductActions = ({ variantId }: ProductActionsProps) => {
       </div>
 
       <div className="flex flex-col space-y-2 px-5">
-        <AddToCartButton quantity={quantity} productVariantId={variantId} />
-
+        <AddToCartButton quantity={quantity} variantId={variantId} />
         <Button size="lg" className="rounded-full">
           Comprar agora
         </Button>

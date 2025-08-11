@@ -2,26 +2,23 @@ import Image from "next/image";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import type {
+  cartItemTable,
+  productTable,
+  productVariantTable,
+} from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
 
 interface CartSummaryProps {
-  subtotalInCents: number;
   totalInCents: number;
-  products: Array<{
-    id: string;
-    name: string;
-    variantName: string;
-    quantity: number;
-    priceInCents: number;
-    variantImageUrl: string;
-  }>;
+  item: typeof cartItemTable.$inferSelect & {
+    productVariant: typeof productVariantTable.$inferSelect & {
+      product: typeof productTable.$inferSelect;
+    };
+  };
 }
 
-const CartSummary = ({
-  subtotalInCents,
-  totalInCents,
-  products,
-}: CartSummaryProps) => {
+const CartSummary = ({ totalInCents, item }: CartSummaryProps) => {
   return (
     <Card>
       <CardHeader>
@@ -33,7 +30,7 @@ const CartSummary = ({
           <div className="flex items-center justify-between">
             <p className="text-sm">Subtotal</p>
             <p className="text-muted-foreground text-sm">
-              {formatCentsToBRL(subtotalInCents)}
+              {formatCentsToBRL(totalInCents)}
             </p>
           </div>
 
@@ -53,34 +50,33 @@ const CartSummary = ({
         <Separator className="my-11" />
 
         <div className="divide-accent space-y-4 divide-y-[1.5px]">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="flex w-full items-center justify-between pb-4"
-            >
-              <div className="flex items-center gap-4">
-                <Image
-                  width={70}
-                  height={70}
-                  src={product.variantImageUrl}
-                  alt={product.name}
-                  className="rounded-lg"
-                />
+          <div className="flex w-full items-center justify-between pb-4">
+            <div className="flex items-center gap-4">
+              <Image
+                width={70}
+                height={70}
+                src={item.productVariant.imageUrl}
+                alt={item.productVariant.product.name}
+                className="rounded-lg"
+              />
 
-                <div className="flex flex-col items-start gap-1">
-                  <p className="text-xs font-semibold">{product.name}</p>
+              <div className="flex flex-col items-start gap-1">
+                <p className="text-xs font-semibold">
+                  {item.productVariant.product.name}
+                </p>
 
-                  <p className="text-muted-foreground text-xs font-medium">
-                    {product.variantName} | {product.quantity}x
-                  </p>
+                <p className="text-muted-foreground text-xs font-medium">
+                  {item.productVariant.name} | {item.quantity}x
+                </p>
 
-                  <p className="text-sm font-semibold">
-                    {formatCentsToBRL(product.priceInCents * product.quantity)}
-                  </p>
-                </div>
+                <p className="text-sm font-semibold">
+                  {formatCentsToBRL(
+                    item.productVariant.priceInCents * item.quantity,
+                  )}
+                </p>
               </div>
             </div>
-          ))}
+          </div>
         </div>
       </CardContent>
     </Card>

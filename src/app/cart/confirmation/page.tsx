@@ -1,8 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import Footer from "@/components/common/footer";
-import Header from "@/components/common/header";
 import {
   Card,
   CardContent,
@@ -17,14 +15,18 @@ import CartSummary from "../components/cart-summary";
 import { formatAddress } from "../helpers/address";
 import FinishOrderButton from "./components/finish-order-button";
 
-const ConfirmationPage = async () => {
+const getSession = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  if (!session?.user) {
+  if (!session) {
     redirect("/");
   }
 
+  return session;
+};
+
+const getCart = async (session: Awaited<ReturnType<typeof getSession>>) => {
   const cart = await db.query.cartTable.findFirst({
     where: (cart, { eq }) => eq(cart.userId, session.user.id),
     with: {
@@ -40,15 +42,27 @@ const ConfirmationPage = async () => {
       },
     },
   });
-  if (!cart || !cart?.items.length) {
+
+  if (!cart || !cart.items.length) {
     redirect("/");
   }
 
-  const cartTotalInCents = cart?.items.reduce((acc, item) => {
+  return cart;
+};
+
+const getTotalInCents = (cart: Awaited<ReturnType<typeof getCart>>) => {
+  return cart.items.reduce((acc, item) => {
     return (acc += item.productVariant.priceInCents * item.quantity);
   }, 0);
+};
 
-  if (!cart?.shippingAddress) {
+const ConfirmationPage = async () => {
+  const session = await getSession();
+
+  const cart = await getCart(session);
+  const totalInCents = getTotalInCents(cart);
+
+  if (!cart.shippingAddress) {
     redirect("/cart/identification");
   }
 
@@ -63,7 +77,7 @@ const ConfirmationPage = async () => {
             <Card>
               <CardContent>
                 <p className="text-sm font-medium">
-                  {formatAddress(cart.shippingAddress)}
+                  {formatAddress(cart?.shippingAddress)}
                 </p>
               </CardContent>
             </Card>
@@ -74,18 +88,13 @@ const ConfirmationPage = async () => {
           </CardFooter>
         </Card>
 
-        <CartSummary
-          subtotalInCents={cartTotalInCents}
-          totalInCents={cartTotalInCents}
-          products={cart?.items.map((item) => ({
-            id: item.id,
-            name: item.productVariant.product.name,
-            priceInCents: item.productVariant.priceInCents,
-            quantity: item.quantity,
-            variantImageUrl: item.productVariant.imageUrl,
-            variantName: item.productVariant.name,
-          }))}
-        />
+        {cart.items.map((cartItem) => (
+          <CartSummary
+            key={cartItem.id}
+            item={cartItem}
+            totalInCents={totalInCents}
+          />
+        ))}
       </div>
     </>
   );

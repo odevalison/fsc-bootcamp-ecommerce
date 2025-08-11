@@ -1,5 +1,3 @@
-"use client";
-
 import type { productTable, productVariantTable } from "@/db/schema";
 
 import ProductItem from "./product-item";

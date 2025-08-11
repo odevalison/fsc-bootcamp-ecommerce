@@ -21,7 +21,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -94,13 +93,12 @@ const SignUpForm = () => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <CardContent className="grid gap-6">
+          <CardContent className="grid gap-3">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome</FormLabel>
                   <FormControl>
                     <Input placeholder="Digite seu nome" {...field} />
                   </FormControl>
@@ -115,7 +113,6 @@ const SignUpForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>E-mail</FormLabel>
                   <FormControl>
                     <Input placeholder="Digite seu e-mail" {...field} />
                   </FormControl>
@@ -130,7 +127,6 @@ const SignUpForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Senha</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -148,7 +144,6 @@ const SignUpForm = () => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirmar senha</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -167,12 +162,13 @@ const SignUpForm = () => {
             <Button
               disabled={form.formState.isSubmitting}
               type="submit"
-              className="flex w-full items-center justify-center"
+              size="lg"
+              className="flex w-full items-center justify-center rounded-full"
             >
               {form.formState.isSubmitting && (
                 <Loader2 className="animate-spin" />
               )}
-              {!form.formState.isSubmitting && "Criar conta"}
+              Criar conta
             </Button>
           </CardFooter>
         </form>

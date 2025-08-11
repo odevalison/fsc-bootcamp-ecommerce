@@ -15,8 +15,7 @@ export const addProductToCart = async (data: AddToProductCartSchema) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-
-  if (!session?.user) {
+  if (!session) {
     throw new Error("Unauthorized!");
   }
 
@@ -38,9 +37,7 @@ export const addProductToCart = async (data: AddToProductCartSchema) => {
   if (!cartId) {
     const [newCart] = await db
       .insert(cartTable)
-      .values({
-        userId: session.user.id,
-      })
+      .values({ userId: session.user.id })
       .returning();
 
     cartId = newCart.id;
@@ -53,7 +50,6 @@ export const addProductToCart = async (data: AddToProductCartSchema) => {
   });
 
   if (cartItem) {
-    console.log("Cart item found, updating quantity");
     await db
       .update(cartItemTable)
       .set({ quantity: cartItem.quantity + data.quantity })

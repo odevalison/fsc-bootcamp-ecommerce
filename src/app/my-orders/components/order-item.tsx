@@ -1,15 +1,17 @@
 import Image from "next/image";
 
+import type {
+  orderItemTable,
+  productTable,
+  productVariantTable,
+} from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
 
 interface OrderItemProps {
-  item: {
-    id: string;
-    productName: string;
-    variantName: string;
-    variantImageUrl: string;
-    variantPriceInCents: number;
-    quantity: number;
+  item: typeof orderItemTable.$inferSelect & {
+    productVariant: typeof productVariantTable.$inferSelect & {
+      product: typeof productTable.$inferSelect;
+    };
   };
 }
 
@@ -21,20 +23,22 @@ const OrderItem = ({ item }: OrderItemProps) => {
           width={0}
           height={0}
           sizes="100%"
-          src={item.variantImageUrl}
-          alt={item.productName}
+          src={item.productVariant.imageUrl}
+          alt={item.productVariant.product.name}
           className="h-full w-auto rounded-xl"
         />
         <div className="flex h-full flex-col justify-between">
           <div>
-            <p className="text-sm font-semibold">{item.productName}</p>
+            <p className="text-sm font-semibold">
+              {item.productVariant.product.name}
+            </p>
             <p className="text-muted-foreground text-xs font-medium">
-              {item.variantName} x {item.quantity}
+              {item.productVariant.name} x {item.quantity}
             </p>
           </div>
 
           <p className="font-semibold">
-            {formatCentsToBRL(item.variantPriceInCents)}
+            {formatCentsToBRL(item.productVariant.priceInCents)}
           </p>
         </div>
       </div>

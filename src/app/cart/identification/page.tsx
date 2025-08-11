@@ -1,22 +1,24 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import Footer from "@/components/common/footer";
-import Header from "@/components/common/header";
 import { db } from "@/db";
 import { auth } from "@/lib/auth";
 
 import CartSummary from "../components/cart-summary";
 import Addresses from "./components/addresses";
 
-const IdentificationPage = async () => {
+const getSession = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  if (!session?.user) {
+  if (!session) {
     redirect("/");
   }
 
+  return session;
+};
+
+const getCart = async (session: Awaited<ReturnType<typeof getSession>>) => {
   const cart = await db.query.cartTable.findFirst({
     where: (cart, { eq }) => eq(cart.userId, session.user.id),
     with: {
@@ -35,37 +37,47 @@ const IdentificationPage = async () => {
     redirect("/");
   }
 
-  const shippingAddresses = await db.query.shippingAddressTable.findMany({
+  return cart;
+};
+
+const getUserAddresses = async () => {
+  const session = await getSession();
+
+  return await db.query.shippingAddressTable.findMany({
     where: (shippingAddress, { eq }) =>
       eq(shippingAddress.userId, session.user.id),
     orderBy: (shippingAddress, { desc }) => [desc(shippingAddress.createdAt)],
   });
-  const cartTotalInCents = cart?.items.reduce((acc, item) => {
+};
+
+const getTotalInCents = (cart: Awaited<ReturnType<typeof getCart>>) => {
+  return cart.items.reduce((acc, item) => {
     return (acc += item.productVariant.priceInCents * item.quantity);
   }, 0);
+};
+
+const IdentificationPage = async () => {
+  const session = await getSession();
+
+  const cart = await getCart(session);
+  const addresses = await getUserAddresses();
+  const cartTotalInCents = getTotalInCents(cart);
 
   return (
-    <>
-      <div className="space-y-4 px-5">
-        <Addresses
-          defaultShippingAddressId={cart?.shippingAddressId || null}
-          initialShippingAddresses={shippingAddresses}
-        />
+    <div className="space-y-4 px-5">
+      <Addresses
+        defaultShippingAddressId={cart.shippingAddressId}
+        initialShippingAddresses={addresses}
+      />
 
+      {cart.items.map((cartItem) => (
         <CartSummary
-          subtotalInCents={cartTotalInCents}
+          key={cartItem.id}
           totalInCents={cartTotalInCents}
-          products={cart?.items.map((item) => ({
-            id: item.id,
-            name: item.productVariant.product.name,
-            priceInCents: item.productVariant.priceInCents,
-            quantity: item.quantity,
-            variantImageUrl: item.productVariant.imageUrl,
-            variantName: item.productVariant.name,
-          }))}
+          item={cartItem}
         />
-      </div>
-    </>
+      ))}
+    </div>
   );
 };
 
