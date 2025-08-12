@@ -1,12 +1,10 @@
-import type { productTable, productVariantTable } from "@/db/schema";
+import type { ProductWithVariantsDTO } from "@/data/products/get";
 
 import ProductItem from "./product-item";
 
 interface ProductsListProps {
   title: string;
-  products: (typeof productTable.$inferSelect & {
-    variants: (typeof productVariantTable.$inferSelect)[];
-  })[];
+  products: ProductWithVariantsDTO[];
 }
 
 const ProductsList = ({ products, title }: ProductsListProps) => {

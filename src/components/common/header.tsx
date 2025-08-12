@@ -15,29 +15,27 @@ const Header = async ({ className }: { className?: string }) => {
   const categories = await getCategories();
 
   return (
-    <>
-      <header
-        className={cn(
-          "flex items-center justify-between bg-white p-5",
-          className,
-        )}
-      >
-        <Link href="/">
-          <Image
-            priority
-            src="/logo.svg"
-            alt="BEWEAR"
-            width={100}
-            height={26.14}
-          />
-        </Link>
+    <header
+      className={cn(
+        "flex items-center justify-between bg-white p-5",
+        className,
+      )}
+    >
+      <Link href="/">
+        <Image
+          priority
+          src="/logo.svg"
+          alt="BEWEAR"
+          width={100}
+          height={26.14}
+        />
+      </Link>
 
-        <div className="flex items-center gap-4">
-          <Cart />
-          <Menu categories={categories} />
-        </div>
-      </header>
-    </>
+      <div className="flex items-center gap-4">
+        <Cart />
+        <Menu categories={categories} />
+      </div>
+    </header>
   );
 };
 

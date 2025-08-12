@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import type { categoryTable } from "@/db/schema";
+import type { CategoryDTO } from "@/data/categories/get";
 
 import { Button } from "../ui/button";
 
 interface CategorySelectorProps {
-  categories: (typeof categoryTable.$inferSelect)[];
+  categories: CategoryDTO[];
 }
 
 const CategorySelector = ({ categories }: CategorySelectorProps) => {
@@ -19,9 +19,7 @@ const CategorySelector = ({ categories }: CategorySelectorProps) => {
             asChild
             className="h-10 rounded-full bg-white text-xs font-semibold"
           >
-            <Link prefetch href={`/category/${category.slug}`}>
-              {category.name}
-            </Link>
+            <Link href={`/category/${category.slug}`}>{category.name}</Link>
           </Button>
         ))}
       </div>

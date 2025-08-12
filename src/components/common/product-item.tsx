@@ -1,29 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { productTable, productVariantTable } from "@/db/schema";
+import type { ProductWithVariantsDTO } from "@/data/products/get";
 import { formatCentsToBRL } from "@/helpers/money";
 
 interface ProductItemProps {
-  product: typeof productTable.$inferSelect & {
-    variants: (typeof productVariantTable.$inferSelect)[];
-  };
+  product: ProductWithVariantsDTO;
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {
-  const firstVariant = product.variants[0];
-
   return (
     <Link
-      href={`/product/${product.slug}?variant=${firstVariant.slug}`}
+      href={`/product/${product.slug}?variant=${product.variants[0].slug}`}
       className="flex flex-col gap-4"
     >
       <Image
         width={0}
         height={0}
         sizes="100%"
-        src={firstVariant.imageUrl}
-        alt={firstVariant.name}
+        src={product.variants[0].imageUrl}
+        alt={product.variants[0].name}
         className="h-[260px] w-[200px] rounded-3xl object-cover"
       />
 
@@ -36,7 +32,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
         </div>
 
         <p className="truncate text-sm font-semibold">
-          {formatCentsToBRL(firstVariant.priceInCents)}
+          {formatCentsToBRL(product.variants[0].priceInCents)}
         </p>
       </div>
     </Link>
