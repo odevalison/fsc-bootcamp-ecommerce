@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { ProductWithVariantsDTO } from "@/data/products/get";
+import type { ProductWithVariantsDto } from "@/data/products/get";
 import { formatCentsToBRL } from "@/helpers/money";
 
 interface ProductItemProps {
-  product: ProductWithVariantsDTO;
+  product: ProductWithVariantsDto;
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {

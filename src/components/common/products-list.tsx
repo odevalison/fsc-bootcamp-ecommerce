@@ -1,10 +1,10 @@
-import type { ProductWithVariantsDTO } from "@/data/products/get";
+import type { ProductWithVariantsDto } from "@/data/products/get";
 
 import ProductItem from "./product-item";
 
 interface ProductsListProps {
   title: string;
-  products: ProductWithVariantsDTO[];
+  products: ProductWithVariantsDto[];
 }
 
 const ProductsList = ({ products, title }: ProductsListProps) => {

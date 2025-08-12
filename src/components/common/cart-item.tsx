@@ -4,11 +4,7 @@ import { MinusIcon, PlusIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
-import type {
-  cartItemTable,
-  productTable,
-  productVariantTable,
-} from "@/db/schema";
+import type { CartItemDto } from "@/data/cart/get";
 import { formatCentsToBRL } from "@/helpers/money";
 import { useDecreaseCartProdudct } from "@/hooks/mutations/use-decrease-cart-product";
 import { useIncreaseCartProduct } from "@/hooks/mutations/use-increase-cart-product";
@@ -17,11 +13,7 @@ import { useRemoveCartProduct } from "@/hooks/mutations/use-remove-cart-product"
 import { Button } from "../ui/button";
 
 interface CartItemProps {
-  item: typeof cartItemTable.$inferSelect & {
-    productVariant: typeof productVariantTable.$inferSelect & {
-      product: typeof productTable.$inferSelect;
-    };
-  };
+  item: CartItemDto;
 }
 
 const CartItem = ({ item }: CartItemProps) => {
@@ -119,6 +111,7 @@ const CartItem = ({ item }: CartItemProps) => {
 
           {item.quantity > 1 && (
             <Button
+              onClick={handleDeleteProduct}
               variant="outline"
               size="icon"
               className="h-10 w-10 rounded-xl"
