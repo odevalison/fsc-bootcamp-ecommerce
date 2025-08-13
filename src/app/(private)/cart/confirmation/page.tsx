@@ -7,11 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { getCartByUserId } from "@/data/cart/get";
 import { getSession } from "@/data/session/get";
 import { getPriceTotalInCents } from "@/helpers/get-total-price-in-cents";
+import { formatCentsToBRL } from "@/helpers/money";
 
-import CartSummary from "../components/cart-summary";
+import CartItemSummary from "../components/cart-summary";
 import { formatAddress } from "../helpers/address";
 import FinishOrderButton from "./components/finish-order-button";
 
@@ -51,13 +53,40 @@ const ConfirmationPage = async () => {
         </CardFooter>
       </Card>
 
-      {cart.items.map((cartItem) => (
-        <CartSummary
-          key={cartItem.id}
-          item={cartItem}
-          totalInCents={totalInCents}
-        />
-      ))}
+      <Card>
+        <CardHeader>
+          <CardTitle>Seu pedido</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm">Subtotal</p>
+              <p className="text-muted-foreground text-sm">
+                {formatCentsToBRL(totalInCents)}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <p className="text-sm">Frete</p>
+              <p className="text-muted-foreground text-sm">Grátis</p>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <p className="text-sm">Total</p>
+              <p className="text-muted-foreground text-sm">
+                {formatCentsToBRL(totalInCents)}
+              </p>
+            </div>
+          </div>
+
+          <Separator className="my-11" />
+
+          {cart.items.map((cartItem) => (
+            <CartItemSummary key={cartItem.id} item={cartItem} />
+          ))}
+        </CardContent>
+      </Card>
     </div>
   );
 };
